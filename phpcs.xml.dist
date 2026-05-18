@@ -5,6 +5,7 @@
     <file>.</file>
 
     <exclude-pattern>.github/*</exclude-pattern>
+    <exclude-pattern>bin/*</exclude-pattern>
     <exclude-pattern>vendor/*</exclude-pattern>
     <exclude-pattern>tmp-build/*</exclude-pattern>
     <exclude-pattern>tmp-dist/*</exclude-pattern>
@@ -15,13 +16,7 @@
 
     <config name="testVersion" value="8.0-"/>
 
-    <rule ref="WordPress"/>
-    <rule ref="WordPress-Extra"/>
-    <rule ref="WordPress-Docs"/>
+    <rule ref="WordPress.Security"/>
+    <rule ref="WordPress.WP.I18n"/>
     <rule ref="PHPCompatibilityWP"/>
-
-    <rule ref="WordPress.Files.FileName">
-        <exclude-pattern>scf-polylang-i18n.php</exclude-pattern>
-        <exclude-pattern>uninstall.php</exclude-pattern>
-    </rule>
 </ruleset>
