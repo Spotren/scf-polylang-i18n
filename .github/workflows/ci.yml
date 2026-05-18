@@ -44,6 +44,7 @@ jobs:
         uses: wordpress/plugin-check-action@v1
         with:
           build-dir: ./tmp-build/scf-polylang-i18n
+          slug: scf-polylang-i18n
 
       - name: Upload ZIP artifact
         uses: actions/upload-artifact@v4
