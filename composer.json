@@ -1,0 +1,30 @@
+{
+  "name": "spotren/scf-polylang-i18n",
+  "description": "Polylang string translation and custom rewrites for SCF-managed custom post types and taxonomies.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Spotren",
+      "homepage": "https://spotren.com/?utm_source=scf-polylang-i18n"
+    }
+  ],
+  "require": {
+    "php": ">=8.0"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "wp-coding-standards/wpcs": "^3.2"
+  },
+  "scripts": {
+    "lint": "phpcs --standard=WordPress,WordPress-Extra,WordPress-Docs --extensions=php .",
+    "lint:fix": "phpcbf --standard=WordPress,WordPress-Extra,WordPress-Docs --extensions=php ."
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "sort-packages": true
+  }
+}
