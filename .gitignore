@@ -1,0 +1,7 @@
+vendor/
+composer.lock
+.phpcs-cache
+coverage/
+scf-polylang-i18n.zip
+tmp-build/
+tmp-dist/

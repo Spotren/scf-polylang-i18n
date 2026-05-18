@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ruleset name="SCF Polylang i18n">
+    <description>WordPress Coding Standards for SCF Polylang i18n.</description>
+
+    <file>.</file>
+
+    <exclude-pattern>.github/*</exclude-pattern>
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>tmp-build/*</exclude-pattern>
+    <exclude-pattern>tmp-dist/*</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="8"/>
+    <arg value="p"/>
+
+    <config name="testVersion" value="8.0-"/>
+
+    <rule ref="WordPress"/>
+    <rule ref="WordPress-Extra"/>
+    <rule ref="WordPress-Docs"/>
+    <rule ref="PHPCompatibilityWP"/>
+
+    <rule ref="WordPress.Files.FileName">
+        <exclude-pattern>scf-polylang-i18n.php</exclude-pattern>
+        <exclude-pattern>uninstall.php</exclude-pattern>
+    </rule>
+</ruleset>

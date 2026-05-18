@@ -18,8 +18,10 @@
     "wp-coding-standards/wpcs": "^3.2"
   },
   "scripts": {
-    "lint": "phpcs --standard=WordPress,WordPress-Extra,WordPress-Docs --extensions=php .",
-    "lint:fix": "phpcbf --standard=WordPress,WordPress-Extra,WordPress-Docs --extensions=php ."
+    "lint": "phpcs --standard=phpcs.xml.dist",
+    "lint:fix": "phpcbf --standard=phpcs.xml.dist",
+    "package": "bin/build-plugin-zip.sh",
+    "smoke": "php bin/smoke-test.php"
   },
   "config": {
     "allow-plugins": {

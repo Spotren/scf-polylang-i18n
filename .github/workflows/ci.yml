@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --no-check-publish
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run coding standards
+        run: composer lint
+
+      - name: Run repository smoke test
+        run: php bin/smoke-test.php
+
+      - name: Build release ZIP
+        run: bin/build-plugin-zip.sh
+
+      - name: Unpack release ZIP for Plugin Check
+        run: |
+          mkdir -p tmp-build
+          unzip -q scf-polylang-i18n.zip -d tmp-build
+
+      - name: Run Plugin Check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: ./tmp-build/scf-polylang-i18n
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scf-polylang-i18n
+          path: scf-polylang-i18n.zip

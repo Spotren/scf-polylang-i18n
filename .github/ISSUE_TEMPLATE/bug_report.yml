@@ -1,0 +1,73 @@
+name: Bug report
+description: Report a reproducible problem in the plugin
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please provide enough detail to reproduce the issue.
+  - type: input
+    id: wordpress_version
+    attributes:
+      label: WordPress version
+      placeholder: "6.9"
+    validations:
+      required: true
+  - type: input
+    id: php_version
+    attributes:
+      label: PHP version
+      placeholder: "8.2"
+    validations:
+      required: true
+  - type: input
+    id: polylang_version
+    attributes:
+      label: Polylang version
+      placeholder: "Example: 3.8"
+    validations:
+      required: true
+  - type: input
+    id: scf_version
+    attributes:
+      label: Secure Custom Fields version
+      placeholder: "Example: 6.8"
+    validations:
+      required: true
+  - type: input
+    id: theme
+    attributes:
+      label: Active theme
+      placeholder: "Example: Twenty Twenty-Five"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Activate the plugin with Polylang and SCF
+        2. Configure a managed custom post type
+        3. Visit the translated archive URL
+        4. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional context
+      description: Include rewrite setup, screenshots, or relevant plugin configuration if helpful.

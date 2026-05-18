@@ -1,88 +1,111 @@
 # SCF Polylang i18n
 
-Plugin local da Spotren para complementar CPTs e taxonomias criados pelo SCF
-com tradução de labels/descriptions via Polylang e bases de URL traduzidas por
-regras próprias do WordPress.
+SCF Polylang i18n is a WordPress plugin that complements custom post types and taxonomies registered with Secure Custom Fields.
 
-## Escopo
+It translates labels and descriptions through Polylang, exposes managed objects in Polylang settings, and adds project-specific rewrite rules for translated CPT and taxonomy URL bases.
 
-O plugin não cria CPTs nem taxonomias. O SCF continua sendo a fonte desses
-objetos. Este plugin atua depois, sobre as APIs core do WordPress.
+## Scope
 
-Ele faz:
+This plugin does not register custom post types or taxonomies. Secure Custom Fields remains the source of truth for object registration.
 
-- registra labels e descriptions de CPTs/taxonomias como strings do Polylang;
-- traduz esses labels/descriptions em runtime com `pll__()`;
-- força CPTs/taxonomias configurados a aparecerem nas configurações do Polylang;
-- cria rewrite rules para bases traduzidas com prefixo de idioma, como
-  `/pt/solucoes/...`;
-- ajusta links gerados por WordPress para usar essas bases traduzidas.
-- limpa suas options no uninstall.
-- adiciona placeholders para SiteSEO: `%%cpt_description%%` e
-  `%%post_type_description%%`.
+The plugin currently provides:
 
-Ele não faz:
+- Polylang string registration for custom post type and taxonomy labels and descriptions
+- Runtime translation of registered labels and descriptions
+- Translated rewrite bases for managed custom post type archives, singles, and taxonomies
+- URL generation filters that keep WordPress links aligned with translated bases
+- Optional SiteSEO placeholder support for `%%cpt_description%%` and `%%post_type_description%%`
+- Automatic cleanup of plugin options on uninstall
 
-- tradução automática de conteúdo;
-- tradução de termos de taxonomia;
-- edição visual dos slugs pelo painel do Polylang, que é recurso do Polylang Pro.
-- substituição de todos os placeholders internos do SiteSEO.
+The plugin does not provide:
 
-## Requisitos
+- Automatic content translation
+- Taxonomy term translation
+- Polylang Pro translated slug UI
+- Full replacement of all internal SiteSEO placeholders
 
-- WordPress 6.5+.
-- PHP 8.0+.
-- Polylang.
-- Secure Custom Fields.
+## Requirements
 
-SiteSEO e opcional; a integração so roda quando o plugin esta ativo e expõe as
-configuracoes esperadas.
+- WordPress 6.5 or later
+- PHP 8.0 or later
+- Polylang
+- Secure Custom Fields
 
-## Publicação e versionamento
+SiteSEO integration is optional and only runs when the SiteSEO plugin is active.
 
-O arquivo `readme.txt` segue o formato do diretório oficial de plugins do
-WordPress. O `README.md` fica como documentação operacional do projeto.
+## Repository layout
 
-Para desenvolvimento do plugin como repositório próprio:
+- `scf-polylang-i18n.php`
+  Plugin bootstrap and metadata
+- `src/`
+  Runtime classes
+- `config/mappings.php`
+  Optional file-based default mappings
+- `languages/`
+  Translation template files
+- `bin/`
+  Repository smoke test and release packaging helpers
+- `.github/`
+  Issue templates and GitHub Actions workflows
+
+## Development
+
+Install development dependencies:
 
 ```bash
 composer install
+```
+
+Run coding standards:
+
+```bash
 composer lint
 ```
 
-Antes de publicar, rode tambem o Plugin Check dentro de um WordPress local:
+Run repository checks:
 
 ```bash
-wp plugin check scf-polylang-i18n
+php bin/smoke-test.php
 ```
 
-## Configuração pelo painel
+Run the runtime smoke test against a local WordPress install:
 
-A tela principal fica em:
+```bash
+php bin/smoke-test.php /absolute/path/to/wordpress
+```
+
+Build a release ZIP from the current commit:
+
+```bash
+bin/build-plugin-zip.sh
+```
+
+The ZIP is created with `git archive --worktree-attributes`, so repository-only files listed in `.gitattributes` stay out of the distributable plugin.
+
+## Local WordPress usage
+
+The main settings screen is available at:
 
 ```text
 Settings > SCF Polylang i18n
 ```
 
-Nessa tela voce controla:
+From there you can manage:
 
-- idiomas usados para as colunas de slug;
-- quais CPTs e taxonomias entram na camada de rewrite;
-- slugs por idioma;
-- se CPTs devem gerar archive e/ou single com base traduzida;
-- se labels/descriptions devem ser registrados como strings do Polylang;
-- se o idioma padrao deve ficar sem prefixo de URL.
+- language columns used for slugs
+- managed custom post types and taxonomies
+- per-language rewrite bases
+- archive and single rewrite behavior for custom post types
+- label and description registration with Polylang
+- whether the default language should remain unprefixed
 
-As configuracoes salvas no painel ficam na option
-`scf_polylang_i18n_mappings`. Depois do primeiro salvamento pelo painel, essa
-option vira a fonte principal dos mapeamentos editaveis.
+Saved settings are stored in the `scf_polylang_i18n_mappings` option. After the first admin save, that option becomes the primary editable mapping source.
 
-## Configuração por arquivo
+## File-based defaults
 
-Tambem e possivel definir defaults em `config/mappings.php`. O painel sobrescreve
-os mesmos itens quando houver option salva.
+You can define defaults in `config/mappings.php`. The admin UI overrides matching values after the option is saved.
 
-Exemplo:
+Example:
 
 ```php
 return [
@@ -110,8 +133,7 @@ return [
 ];
 ```
 
-Com `unprefixed_default_language => false`, todas as URLs geradas usam o prefixo
-de idioma. Para português:
+With `unprefixed_default_language => false`, generated URLs include a language prefix for every configured language, for example:
 
 ```text
 /pt/solucoes/
@@ -119,47 +141,22 @@ de idioma. Para português:
 /pt/categorias-de-solucoes/nome-do-termo/
 ```
 
-## Flush de permalinks
+## Release workflow
 
-O plugin faz flush das rewrite rules quando é ativado ou quando o hash da
-configuração muda. Se algo ficar fora de sincronia, salve novamente
-`Settings > Permalinks`.
+The repository includes:
 
-## Cuidados
+- `CI`
+  Runs Composer validation, PHPCS, the repository smoke test, build packaging, and Plugin Check against the packaged plugin
+- `Release Plugin ZIP`
+  Builds `scf-polylang-i18n.zip` and attaches it to GitHub releases
 
-As bases configuradas não devem conflitar entre si dentro do mesmo idioma. Evite,
-por exemplo, usar `pt/solucoes` para um CPT e uma taxonomia ao mesmo tempo.
+## SiteSEO placeholders
 
-Por padrao, a traducao automatica de labels/descriptions ignora objetos internos
-nao publicos de outros plugins. Para forcar um CPT/taxonomia especifico, marque
-o item no painel.
-
-## SiteSEO
-
-Para archives de CPT, o SiteSEO usa a `description` do post type como fallback
-quando o campo `Meta description template` fica vazio.
-
-Este plugin tambem adiciona dois placeholders para os campos de meta description
-do SiteSEO:
+For CPT archives and singles, the plugin adds these placeholders to SiteSEO templates:
 
 ```text
 %%cpt_description%%
 %%post_type_description%%
 ```
 
-Use em:
-
-```text
-SiteSEO > Titles & Metas > Archives > [CPT] > Meta description template
-```
-
-Tambem funciona nos templates de titulo e meta description de single CPT. O
-placeholder e resolvido antes do SiteSEO imprimir as meta tags no `wp_head`, e o
-document title recebe uma substituicao defensiva depois do SiteSEO calcular o
-titulo.
-
-Exemplo:
-
-```text
-%%cpt_description%%
-```
+They can be used in SiteSEO title and meta description templates for managed custom post types.
